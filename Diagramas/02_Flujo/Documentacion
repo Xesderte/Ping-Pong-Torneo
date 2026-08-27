@@ -1,0 +1,20 @@
+1. Diagrama de Flujo: Generación de Fixture (El inicio)
+Qué analiza: La lógica matemática para armar los partidos iniciales.
+
+El flujo que mostrará: El camino desde que Java recibe la lista de jugadores. ¿Es un número par o impar? Si es impar, ¿quién queda libre en cada fecha? ¿Cómo se distribuyen los jugadores en 2, 4 u 8 grupos de manera equilibrada y cómo se arman los cruces de "Todos contra Todos" dentro de ese grupo?
+
+Su propósito en el código: Este será tu método generarFixture() en Java.
+
+2. Diagrama de Flujo: Ciclo de Partido y Actualización (El día a día)
+Qué analiza: El ciclo de vida de un resultado ingresado.
+
+El flujo que mostrará: El frontend envía un resultado (Ej: 2-1 en sets). El diagrama mostrará cómo Java recibe los datos, valida que los puntos tengan sentido, suma el partido jugado, asigna los puntos por victoria o derrota al equipo, recalcula los sets a favor/en contra y guarda la nueva posición en la base de datos (SQLite).
+
+Su propósito en el código: Este será tu método registrarResultadoActualizarTabla() en Java. Es el endpoint que más tráfico va a recibir.
+
+3. Diagrama de Flujo: El Motor de Desempate (El núcleo duro)
+Qué analiza: La resolución de conflictos en la tabla de posiciones.
+
+El flujo que mostrará: Como bien mencionaste, este es el diagrama crítico. Mostrará el árbol de decisiones estricto: ¿Hay empate en puntos? SI ➡️ Evaluar Diferencia de Sets. ¿Sigue el empate? SI ➡️ Evaluar Diferencia de Puntos (Tantos). ¿Sigue el empate? SI ➡️ Evaluar Resultado entre ellos (Partido Directo). ¿Sigue el empate? SI ➡️ Sorteo aleatorio.
+
+Su propósito en el código: Este será tu método calcularDesempate(). Extraer esto en un diagrama separado es vital porque los sistemas de torneos suelen fallar exactamente en este punto por no tener el flujo claro.
