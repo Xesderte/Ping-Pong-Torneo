@@ -4,9 +4,42 @@ Fases_Procesos.md
 Software.md
 idea_torneo.md
 
+
+Unicamente dame un analisis tecnico.(No envies codigo)
+
+----------------------------------------------
+
 Toma en cuanta que este diagrama debe de realizar:
 
 
 Dame el siguiente Diagrama en fucnion a "COMPLETAR", damelo en codigo de mermaid
 Dame su nombre que tiene que tener el archivo
 
+--------------------------------------------------------------
+
+Correciones:
+
+🚨 1. Diagramas Actuales que DEBEN Corregirse
+
+A. Corregir: Diagrama de Excepciones (Secuencia_Excepciones.md)El Error: El diagrama agrupa en un mismo flujo la acción de "Registrar baja (W.O.) o reemplazo de un jugador".  Fundamento Técnico: Según la Fase 4 de tu documentación, estas dos acciones disparan transacciones completamente distintas en el backend.El Reemplazo es una simple actualización de texto (UPDATE nombre) que no afecta la matemática del torneo.El Abandono Total es una transacción masiva y destructiva: el backend debe recalcular retroactivamente todos los partidos pasados, asignar 0 puntos al retirado, otorgar victorias a los rivales y recalcular toda la tabla global.Acción Requerida: Debes separar este diagrama en dos (o usar un bloque alt muy claro). Un flujo ligero para el reemplazo de texto, y un flujo pesado para el recalculo en cascada del abandono total.
+
+B. Corregir: Diagrama de Cierre de Torneo (Secuencia_Cierre_Torneo.md)  El Error: El diagrama asume que al llegar el contador de partidos pendientes a 0, el backend automáticamente "Consolida la tabla y determina al Campeón" y bloquea la base de datos.  Fundamento Técnico: Esto viola la arquitectura de la Fase 5 (Transición a Eliminatorias). Esta automatización de coronar al campeón al terminar el fixture solo es válida si el formato elegido fue "Liga". Si el formato es "Fase de Grupos", el último partido no define al campeón, sino que detona la generación de la "Lista de Rendimiento General" para pasar a la etapa de llaves manuales y repechajes.Acción Requerida: El backend (Java) debe incluir un bloque de decisión (alt). Si es Liga: corona al campeón y finaliza. Si es Fase de Grupos: consolida la tabla, pero en lugar de finalizar, habilita el estado del torneo para el "Armado Libre de Eliminatorias".
+
+
+🧩 2. Diagramas de Secuencia FALTANTES
+Para que la documentación de comunicación transaccional sea robusta, te faltan estos tres flujos cronológicos:
+
+Falta 1: Secuencia de "Setup Inicial y Sorteos" (Fases 1 y 2)
+Por qué falta: No tienes documentado cómo viaja la configuración desde el Frontend hasta que nace el torneo en SQLite.
+
+Qué debe mostrar: La línea de tiempo donde el Frontend envía el JSON con los jugadores y reglas (sets, ventaja, puntuación). El momento en que Java ejecuta el "mini-sorteo 100% aleatorio" para parejas, y cómo Java interactúa con SQLite insertando el "Bulk" (inserción masiva) de los equipos, finalizando con la generación de cruces (fixture) y devolviendo un HTTP 200 OK de que el torneo está listo para arrancar.
+
+Falta 2: Secuencia de "Auditoría de Historial de Enfrentamientos" (Fase 3)
+Por qué falta: La documentación hace mucho énfasis en la transparencia del Criterio 1 (Enfrentamiento directo), permitiendo al Organizador hacer clic en la fila de un equipo para ver sus detalles.
+
+Qué debe mostrar: Una transacción de solo lectura (GET). El Frontend solicita el historial de un equipo específico (ID), Java consulta en SQLite los partidos terminados de ese equipo, estructura los resultados por set de cada enfrentamiento, y el Frontend renderiza el panel secundario. Es vital porque demuestra cómo la interfaz no sobrecarga el Dashboard inicial con todos los datos.
+
+Falta 3: Secuencia de "Transición y Armado Manual de Llaves" (Fase 5)
+Por qué falta: Es el diferencial de tu software (la "libertad absoluta de emparejamiento"), pero no está diagramado a nivel sistema.
+
+Qué debe mostrar: El flujo donde el Frontend pide la "Lista de Rendimiento" post-grupos. Luego, el Organizador arma las llaves manualmente y envía un payload (JSON) con los nuevos cruces de eliminación directa y las "Nuevas Reglas de Partido" (ya que la fase 5 permite reconfigurar sets y puntos). Finalmente, muestra cómo Java guarda estos cruces finales en SQLite con las nuevas reglas.
