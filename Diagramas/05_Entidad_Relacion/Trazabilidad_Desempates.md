@@ -13,6 +13,7 @@ classDiagram
         +int partidos_jugados
         +int partidos_ganados
         +int partidos_perdidos
+        +int partidos_no_presentacion
         +int diferencia_sets
         +int sets_ganados
         +int sets_perdidos

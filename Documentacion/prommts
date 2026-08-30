@@ -1,0 +1,85 @@
+Todavia no tengo ningun diagrama, conrespeto a est tipo de diagrama que te acabo de enviar:
+Quisiera que me des una lista de cada uno de los diagramas que deberia de crear:
+
+Toma en cuenta todos los diagramas que hemos creado hasta el momento:
+
+Fundamenta tambien la creacion de estos nuevos diagramas en:
+
+Fases_Procesos.md
+Software.md
+idea_torneo.md
+
+
+--------------------------------------------------------------
+
+Esos son hasta ahora los unicos diagramas de "COMPLETAR" que tengo. Me gustaria saber que diagramas de caso me faltarian, a detalle fundamenentandote en:
+
+Fases_Procesos.md
+Software.md
+idea_torneo.md
+(Los diagramas anteriores que tenemos y que hemos modificado creado.)
+
+
+Unicamente dame un analisis tecnico.(No envies codigo)
+
+Solamente dame una lista de lo que tendria que crear, y si hay que modicar.
+
+Devolveme:
+Nombre del Archivo a Modificar:(No me envies Source 15 o 34, cualquiera sea su numero). Enviame el nombre del Archivo: Los archivos sí tenían nombres explícitos, NO los pasés por alto al procesar la estructura de los diagramas.
+Que hay que modificar y porque??
+
+Si es que es necesario agregar o modificar los diagramas.
+----------------------------------------------
+
+Toma en cuanta que este diagrama debe de realizar:
+
+
+Dame el siguiente Diagrama en fucnion a "COMPLETAR", damelo en codigo de mermaid
+Dame su nombre que tiene que tener el archivo
+
+--------------------------------------------------------------
+
+# 🚥 Arquitectura de Estados: Ciclo de Vida de las Entidades
+
+Tras haber consolidado los Casos de Uso, Diagramas de Flujo (Lógica) y Secuencia (Transacciones), el siguiente paso para blindar la arquitectura es modelar cómo cambian de estado las entidades principales a lo largo del tiempo. 
+
+Basándonos en la documentación rectora (`Fases_Procesos.md`, `Software.md` y `idea_torneo.md`), el sistema es un "ecosistema vivo". Para documentarlo correctamente sin redundancias, **necesitamos crear exactamente tres (3) Diagramas de Estados**. 
+
+A continuación, se detalla la lista de los diagramas a construir y su fundamentación analítica:
+
+---
+
+## 1. Diagrama de Estados de la entidad "Torneo" (Ciclo de Vida Global)
+
+*   **Descripción del Diagrama:** Modelará los estados por los que pasa el campeonato en su totalidad, desde que se crea hasta que se corona a un campeón.
+*   **Estados propuestos:** `CONFIGURACIÓN` ➔ `EN_CURSO (Grupos/Liga)` ➔ `TRANSICIÓN (Espera)` ➔ `ELIMINATORIAS` ➔ `FINALIZADO`.
+*   **Fundamentación Técnica:**
+    *   **Fases_Procesos.md:** Define claramente 5 fases cronológicas. El torneo no se comporta igual en la Fase 1 que en la Fase 5. 
+    *   **Software.md:** Determina qué permisos tiene el Organizador según el estado del torneo. Por ejemplo, la reconfiguración de reglas (cambiar de 3 a 5 sets) solo se permite cuando el torneo transiciona de la Fase 3 a la Fase 5 (Eliminatorias). Este diagrama documentará esos candados de seguridad.
+
+## 2. Diagrama de Estados de la entidad "Equipo / Participante" (Motor de Excepciones)
+
+*   **Descripción del Diagrama:** Rastreará la condición vital de los competidores dentro de la base de datos, mapeando qué eventos disparan sus cambios de estado.
+*   **Estados propuestos:** `INSCRITO` ➔ `ACTIVO` ➔ `RETIRADO` (Estado final irrevocable).
+*   **Fundamentación Técnica:**
+    *   **Fases_Procesos.md & idea_torneo.md:** Ambos documentos hacen un fuerte énfasis en la "Fase 4: Manejo de Excepciones (El Caos)". 
+    *   **Justificación:** Un jugador puede sufrir un reemplazo (lo cual no cambia su estado `ACTIVO`, solo muta su nombre), pero si ocurre un "Abandono Total", la entidad pasa a `RETIRADO`. Este diagrama es crucial porque ilustrará cómo alcanzar el estado `RETIRADO` actúa como un "gatillo" o *trigger* que dispara el bucle transaccional destructivo (asignación retroactiva y futura de 0 puntos para él y victorias para sus rivales).
+
+## 3. Diagrama de Estados de la entidad "Partido" (Unidad Transaccional)
+
+*   **Descripción del Diagrama:** Modelará el ciclo de vida de un encuentro específico dentro del fixture, desde que es sorteado hasta que impacta en la tabla general.
+*   **Estados propuestos:** `CREADO` ➔ `PENDIENTE` ➔ `JUGADO / FINALIZADO` ➔ `WALKOVER` (Victoria por escritorio) o `CANCELADO`.
+*   **Fundamentación Técnica:**
+    *   **idea_torneo.md:** Establece que se asignan puntos base específicos por "Victoria", "Derrota" y "No presentación".
+    *   **Software.md:** El Organizador carga los resultados de forma manual.
+    *   **Justificación:** El Motor Lógico necesita saber exactamente en qué estado está un partido para contabilizarlo. Si el partido está `PENDIENTE`, no suma a la tabla. Si pasa a `JUGADO`, dispara el cálculo de sets y puntos. Si un equipo abandona, el estado del partido muta a `WALKOVER`, forzando al sistema a cerrarlo sin sets jugados y asignar directamente los puntos de victoria al equipo que quedó en pie.
+
+---
+
+### 💡 Resumen del Siguiente Paso
+Estos **tres diagramas** son todo lo que necesitas para cubrir la dimensión de "Estados" de tu software. 
+1. El estado del **Torneo** controla las *Fases de la aplicación*.
+2. El estado del **Equipo** controla el *Manejo del Caos (Fase 4)*.
+3. El estado del **Partido** controla la *Transaccionalidad del Fixture*.
+
+Cuando estés listo, podemos empezar a generarlos uno por uno en código Mermaid basándonos en esta estructura.

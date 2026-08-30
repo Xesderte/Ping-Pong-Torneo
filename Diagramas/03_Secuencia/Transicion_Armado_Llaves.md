@@ -26,6 +26,9 @@ sequenceDiagram
     UI->>API: POST /api/torneos/{id_torneo}/eliminatorias (Payload: Cruces + Nuevas Reglas)
     activate API
     
+    %% Validación de Integridad
+    API->>API: Valida integridad del mapeo (Ej. evita equipos duplicados)
+    
     %% Transacción de Guardado en Base de Datos
     API->>DB: BEGIN TRANSACTION
     activate DB

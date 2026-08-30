@@ -18,11 +18,14 @@ flowchart TD
     %% Bloque de Algoritmo Round-Robin
     EvaluarParidad{¿La cantidad de jugadores es Par?}
     EvaluarParidad -->|NO| AgregarLibre[Agregar jugador ficticio 'LIBRE' a la lista]
-    EvaluarParidad -->|SÍ| EvaluarModalidad
-    AgregarLibre --> EvaluarModalidad
+    EvaluarParidad -->|SÍ| CheckFormatoIdaVuelta{¿Es torneo de Liga?}
+    AgregarLibre --> CheckFormatoIdaVuelta
     
     %% Evaluación de Ida o Ida y Vuelta
-    EvaluarModalidad[Calcular Fechas: Si es Ida y Vuelta, duplicar y alternar localías] --> BucleFechas
+    CheckFormatoIdaVuelta -->|NO / Grupos| SoloIda[Calcular Fechas: Solo Ida obligatoriamente]
+    CheckFormatoIdaVuelta -->|SÍ / Liga| EvaluarModalidad[Calcular Fechas: Si es Ida y Vuelta, duplicar y alternar localías]
+    SoloIda --> BucleFechas
+    EvaluarModalidad --> BucleFechas
     
     %% Lógica de Rotación por Fecha
     BucleFechas[Iniciar Bucle: Por cada Fecha del Torneo] --> FijarPivot[Fijar Jugador 1 y rotar posiciones del resto]
@@ -49,6 +52,6 @@ flowchart TD
     classDef decision fill:#6d3b47,stroke:#a55c6e,stroke-width:2px,color:#fff;
     classDef bd fill:#3b592d,stroke:#5c8a46,stroke-width:2px,color:#fff;
     
-    class EvaluarFormato,EvaluarParidad,CheckLibre,FinBucle decision;
-    class AgregarLibre,FijarPivot,Emparejar,EvaluarModalidad logica;
+    class EvaluarFormato,EvaluarParidad,CheckFormatoIdaVuelta,CheckLibre,FinBucle decision;
+    class AgregarLibre,FijarPivot,Emparejar,EvaluarModalidad,SoloIda logica;
     class GuardarFechaDB bd;

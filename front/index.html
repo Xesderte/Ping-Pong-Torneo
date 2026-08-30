@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Torneo Ping Pong</title>
+    <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">🏓 PingPong Admin</div>
+        <ul class="nav-links">
+            <li><button class="nav-btn active" data-target="ventana1">1. Configuración</button></li>
+            <li><button class="nav-btn" data-target="ventana2">2. Equipos</button></li>
+            <li><button class="nav-btn" data-target="ventana3">3. Torneo</button></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <!-- VENTANA 1: CONFIGURACION -->
+        <div id="ventana1" class="window active">
+            <h2>Formato y Configuración</h2>
+            <form id="formConfig">
+                <div class="form-group">
+                    <label>Nombre del Torneo</label>
+                    <input type="text" id="nombreTorneo" required>
+                </div>
+                <div class="form-group">
+                    <label>Formato</label>
+                    <select id="formatoTorneo">
+                        <option value="Liga">Liga Única</option>
+                        <option value="Fase de Grupos">Fase de Grupos</option>
+                    </select>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Cantidad de Sets</label>
+                        <input type="number" id="cantSets" value="3" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Límite de Puntos</label>
+                        <input type="number" id="limitePuntos" value="11" min="5" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="ventaja" checked> Requiere ventaja de 2 puntos
+                    </label>
+                </div>
+                <button type="submit" class="btn">Guardar y Siguiente ➡️</button>
+            </form>
+        </div>
+
+        <!-- VENTANA 2: EQUIPOS Y JUGADORES -->
+        <div id="ventana2" class="window">
+            <h2>Equipos y Jugadores</h2>
+            <div class="form-group">
+                <label>Modalidad</label>
+                <select id="modalidadEquipos">
+                    <option value="individual">Individual / Equipos ya formados</option>
+                    <option value="grupal">Jugadores Sueltos (Sorteo de Parejas)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Agregar Nombre</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="nombreInput" placeholder="Nombre...">
+                    <button type="button" class="btn" id="btnAgregarNombre">Agregar</button>
+                </div>
+            </div>
+            
+            <ul id="listaNombres" class="item-list"></ul>
+
+            <div id="configGrupos" style="display:none;" class="form-group">
+                <label>Máximo de equipos por Grupo</label>
+                <input type="number" id="maxEquiposGrupo" value="4" min="2">
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 2rem;">
+                <button type="button" class="btn" id="btnSorteo">Finalizar y Generar Sorteo 🎲</button>
+            </div>
+        </div>
+
+        <!-- VENTANA 3: TORNEO Y FIXTURE -->
+        <div id="ventana3" class="window">
+            <h2 id="tituloTorneo">Torneo</h2>
+            <div class="grid-2">
+                
+                <!-- Fixture -->
+                <div>
+                    <h3>Fixture (Por Fechas)</h3>
+                    <div id="fixtureContainer"></div>
+                </div>
+                
+                <!-- Tabla -->
+                <div>
+                    <h3>Tabla de Posiciones</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Equipo</th>
+                                <th>Pts</th>
+                                <th>PJ</th>
+                                <th>G</th>
+                                <th>P</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaPosiciones"></tbody>
+                    </table>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL RESULTADO -->
+    <div id="modalResultado" class="modal">
+        <div class="modal-content">
+            <h3>Cargar Resultado</h3>
+            <p id="partidoLabel"></p>
+            <form id="formResultado">
+                <input type="hidden" id="partidoActivoId">
+                <div id="setsContainer"></div>
+                <button type="button" class="btn btn-secondary" id="btnAddSet" style="margin-top:10px">+ Añadir Set</button>
+                <div style="margin-top: 20px; display: flex; gap: 10px;">
+                    <button type="submit" class="btn">Guardar Partido</button>
+                    <button type="button" class="btn btn-danger" id="btnCerrarModal">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>

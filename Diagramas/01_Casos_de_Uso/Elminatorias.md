@@ -8,7 +8,7 @@ flowchart TD
         direction TB
         
         F1(Consultar Ranking de Rendimiento Final)
-        F2(Armar Llaves Manualmente - Drag and Drop)
+        F2(Armar Llaves Manualmente - Definir Instancias, Cruces Asimétricos y Llaves de Repechaje)
         F3(Reconfigurar Reglas de Partido: Sets y Puntos)
         F4(Registrar Resultados de Eliminatorias)
         F5(((🏆 Declarar Campeón)))
@@ -26,6 +26,7 @@ flowchart TD
     F4 -->|Gana la final| F5
 
     %% Interacción con el Backend (Java)
-    F2 -.->|Guarda el mapeo de los cruces| Sys
+    F2 -.->|Envía cruces tentativos| Sys
+    Sys -.->|Valida integridad/duplicados y aprueba llaves| F3
     F4 -.->|Envia puntos del partido| Sys
     Sys -.->|Calcula el ganador y lo avanza de ronda| F4

@@ -18,6 +18,7 @@ sequenceDiagram
     
     %% Validaciones y Lógica en Java
     API->>API: Valida consistencia de los datos (Reglas de Sets)
+    API->>API: Valida parámetro 'Regla de Ventaja' (Diferencia obligatoria de 2 pts)
     API->>API: Calcula nuevos puntos y ejecuta Motor de Desempate
     
     %% Transacción con la Base de Datos
@@ -27,7 +28,7 @@ sequenceDiagram
     deactivate DB
     
     %% Respuesta al Frontend
-    API-->>UI: HTTP 200 OK (Devuelve JSON con Tabla Recalculada)
+    API-->>UI: HTTP 200 OK (JSON con Tabla Recalculada: PJ, PG, PP, Pts, DS, SG, SP, DP, PF, PC, SB)
     deactivate API
     
     %% Actualización Visual en Tiempo Real

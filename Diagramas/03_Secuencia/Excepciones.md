@@ -43,6 +43,7 @@ sequenceDiagram
         
         %% Recálculo del Motor Lógico
         API->>API: Ejecuta motor para recalcular métricas de la Tabla Global (PJ, PG, Pts, etc.)
+        API->>API: Ejecuta recálculo en cascada del índice Sonneborn-Berger (Calidad de Rival)
         
         DB-->>API: COMMIT (Confirma y guarda los cambios en cascada)
         deactivate DB

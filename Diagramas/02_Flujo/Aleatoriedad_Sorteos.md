@@ -22,9 +22,13 @@ flowchart TD
     EvaluarFormato -->|NO / Liga| FinLiga([Fin: Pasar Array consolidado al método generarFixture])
     
     EvaluarFormato -->|SÍ| RecibirCupos[Recibir config: Cantidad de Grupos y sus respectivos cupos]
-    RecibirCupos --> ShuffleEquipos[Mezclar aleatoriamente el Array final de Equipos]
+    RecibirCupos --> EvaluarSimetria{¿Los grupos son simétricos o asimétricos?}
+    EvaluarSimetria --> ShuffleEquipos[Mezclar aleatoriamente el Array final de Equipos]
     ShuffleEquipos --> BucleGrupos[Bucle: Iterar Array de Equipos mezclado]
-    BucleGrupos --> AsignarGrupo[Asignar Equipo al Grupo correspondiente hasta llenar su cupo]
+    BucleGrupos --> ValidarCupo{¿El Grupo actual tiene cupos disponibles?}
+    ValidarCupo -->|SÍ| AsignarGrupo[Asignar Equipo al Grupo actual]
+    ValidarCupo -->|NO| SiguienteGrupo[Mover iterador al siguiente Grupo con cupos restantes]
+    SiguienteGrupo --> AsignarGrupo
     AsignarGrupo --> FinGrupos{¿Faltan Equipos por ubicar?}
     FinGrupos -->|SÍ| BucleGrupos
     
@@ -37,6 +41,6 @@ flowchart TD
     classDef decision fill:#6d3b47,stroke:#a55c6e,stroke-width:2px,color:#fff;
     classDef bd fill:#3b592d,stroke:#5c8a46,stroke-width:2px,color:#fff;
     
-    class EvaluarModalidad,FinParejas,EvaluarFormato,FinGrupos decision;
-    class ShuffleJugadores,BucleParejas,CrearEquipo,AsignarDirecto,ListaEquipos,RecibirCupos,ShuffleEquipos,BucleGrupos,AsignarGrupo logica;
+    class EvaluarModalidad,FinParejas,EvaluarFormato,EvaluarSimetria,ValidarCupo,FinGrupos decision;
+    class ShuffleJugadores,BucleParejas,CrearEquipo,AsignarDirecto,ListaEquipos,RecibirCupos,ShuffleEquipos,BucleGrupos,SiguienteGrupo,AsignarGrupo logica;
     class GuardarGrupos bd;

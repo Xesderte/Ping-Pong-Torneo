@@ -19,6 +19,7 @@ classDiagram
         +int cantidad_sets
         +int limite_puntos
         +boolean ventaja_dos_puntos
+        +String modalidad_cruces
         +validarFormatosPermitidos()
     }
     note for ConfiguracionReglas "Formatos Impares: 1, 3, 5 o 7\nPuntaje Objetivo: 5, 7 u 11"

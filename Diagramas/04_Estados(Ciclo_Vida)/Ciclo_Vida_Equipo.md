@@ -21,6 +21,12 @@ stateDiagram-v2
         Compitiendo : - Suma puntos en la tabla
         Compitiendo : - Elegible para llaves de eliminatorias
         
+        %% Sub-estado de Transición
+        Compitiendo --> EN_REPECHAJE : Fin Fase Grupos (Sobrante impar / Decisión manual)
+        EN_REPECHAJE : Fase 5
+        EN_REPECHAJE : - Etiquetado para jugar llaves de clasificación
+        EN_REPECHAJE --> Compitiendo : Gana el cruce de repechaje
+        
         %% Manejo de Excepciones Menores (Transición interna)
         Compitiendo --> Compitiendo : Abandono Parcial (Reemplazo)
         note right of Compitiendo
@@ -33,6 +39,9 @@ stateDiagram-v2
     %% El evento catastrófico (Fase 4)
     ACTIVO --> RETIRADO : Registrar Abandono Total (Equipo completo o Individual)
 
+    %% Fin del ciclo competitivo (Matemático o Playoffs)
+    ACTIVO --> ELIMINADO : No clasifica o pierde partido eliminatorio
+    
     %% Estado 3: Irrevocable y Transaccional
     state RETIRADO {
         [*] --> Bucle_Destructivo
@@ -43,4 +52,13 @@ stateDiagram-v2
         Bucle_Destructivo : 3. Se recalcula la matemática general de la tabla
     }
 
+    %% Estado 4: Fin de Participación
+    state ELIMINADO {
+        [*] --> Fuera_Competencia
+        Fuera_Competencia : Estado Final (Natural)
+        Fuera_Competencia : - Fin de participación en el torneo
+        Fuera_Competencia : - Su historial de puntos queda intacto (No destructivo)
+    }
+
     RETIRADO --> [*]
+    ELIMINADO --> [*]

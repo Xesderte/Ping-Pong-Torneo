@@ -17,7 +17,7 @@ flowchart TD
         T4 --> T5(Envía automáticamente al equipo sobrante / 3er lugar a Zona de Repechaje)
         
         %% Consolidación de la Lista
-        T3 --> T6(Genera la Lista de Rendimiento General Completa)
+        T3 --> T6(Genera y Muestra Lista de Rendimiento: Clasificados directos, Zona de Repechaje y Eliminados)
         T5 --> T6
     end
 

@@ -3,11 +3,13 @@ erDiagram
     %% Relaciones Principales
     TORNEO ||--|{ FASE_GRUPO : "contiene"
     TORNEO ||--|{ EQUIPO : "inscribe (sin límite)"
+    EQUIPO ||--|{ JUGADOR : "contiene (1 o 2)"
     FASE_GRUPO ||--|{ EQUIPO : "agrupa (simétrico/asimétrico)"
     FASE_GRUPO ||--o{ PARTIDO : "organiza fixture"
     EQUIPO ||--o{ PARTIDO : "juega como local"
     EQUIPO ||--o{ PARTIDO : "juega como visitante"
     PARTIDO ||--|{ SET : "desglosa puntaje"
+    PARTIDO ||--o| PARTIDO : "avanza a (siguiente bracket)"
 
     %% Definición de Tablas y Atributos
 
@@ -31,6 +33,13 @@ erDiagram
         int id_fase FK
         string nombre "Nombre del dúo o jugador individual"
         string estado "ACTIVO o RETIRADO"
+        string estado_clasificacion "Clasificado Directo, Repechaje, Eliminado"
+    }
+
+    JUGADOR {
+        int id_jugador PK
+        int id_equipo FK
+        string nombre "Nombre real de la persona"
     }
 
     PARTIDO {
@@ -38,7 +47,10 @@ erDiagram
         int id_fase FK
         int id_equipo_local FK
         int id_equipo_visitante FK
+        int id_partido_siguiente_fk "NULL si es la Final"
         string estado "PENDIENTE, JUGADO, WALKOVER, CANCELADO"
+        int puntos_tabla_local "Puntos otorgados a tabla"
+        int puntos_tabla_visitante "Puntos otorgados a tabla"
     }
 
     SET {

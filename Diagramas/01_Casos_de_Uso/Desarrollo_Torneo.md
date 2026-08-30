@@ -34,5 +34,5 @@ flowchart TD
     D1 -.->|Envia puntajes del partido| Sys
     E2 -.->|Notifica el retiro| Sys
 
-    Sys -.->|Procesa desempates y actualiza posiciones| D2
-    Sys -.->|Asigna derrotas con 0 pts a futuros cruces| D2
+    Sys -.->|Ejecuta Motor Estricto de Desempate (8 Criterios en Cascada) y actualiza posiciones| D2
+    Sys -.->|Reasigna derrotas/victorias pasadas y futuras + Recalcula Sonneborn-Berger| D2

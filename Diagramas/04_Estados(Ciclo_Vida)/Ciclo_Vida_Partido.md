@@ -20,10 +20,22 @@ stateDiagram-v2
         Espera : - No contabiliza ni afecta a la tabla general de posiciones
     }
 
+    PENDIENTE --> EN_CURSO : El Organizador guarda el primer set (Guardado Parcial)
+    
+    %% Estado Intermedio: Actualización Progresiva
+    state EN_CURSO {
+        [*] --> Actualizacion_Parcial
+        Actualizacion_Parcial : - Se registran sets de forma progresiva
+        Actualizacion_Parcial : - No detona recálculo de tabla general
+    }
+    
     %% Bifurcaciones Transaccionales (Acciones que cierran el partido)
-    PENDIENTE --> JUGADO : El Organizador carga los puntos exactos por set al finalizar
-    PENDIENTE --> WALKOVER : Un equipo es marcado con "Abandono Total"
+    EN_CURSO --> JUGADO : Se completan todos los sets y se declara ganador
+    PENDIENTE --> JUGADO : El Organizador carga todos los sets de una vez al finalizar
+    PENDIENTE --> WALKOVER : Registra Abandono Total (Equipo completo o Jugador Individual)
+    EN_CURSO --> WALKOVER : Registra Abandono Total (Equipo completo o Jugador Individual)
     PENDIENTE --> CANCELADO : Suspensión manual por fuerza mayor
+    EN_CURSO --> CANCELADO : Suspensión manual por fuerza mayor
 
     %% Estado 3: Flujo Ideal
     state JUGADO {

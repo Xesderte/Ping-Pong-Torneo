@@ -28,10 +28,10 @@ stateDiagram-v2
     EN_CURSO --> validacion_formato : Se juegan todos los partidos pendientes
 
     validacion_formato --> FINALIZADO : [Formato Liga]
-    validacion_formato --> TRANSICION : [Fase de Grupos]
+    validacion_formato --> TRANSICION_ELIMINATORIAS : [Fase de Grupos]
 
     %% Estado de Preparación para Playoffs
-    state TRANSICION {
+    state TRANSICION_ELIMINATORIAS {
         [*] --> Espera
         Espera : Fase 5 (Inicio)
         Espera : - Se bloquea la tabla de posiciones
@@ -40,7 +40,7 @@ stateDiagram-v2
         Espera : - Armado libre y manual de llaves
     }
 
-    TRANSICION --> ELIMINATORIAS : El Organizador confirma las llaves
+    TRANSICION_ELIMINATORIAS --> ELIMINATORIAS : El Organizador confirma las llaves
 
     %% Estado de Playoffs
     state ELIMINATORIAS {
